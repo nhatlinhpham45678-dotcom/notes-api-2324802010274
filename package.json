@@ -1,0 +1,24 @@
+{
+  "name": "notes-api-2324802010274",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nhatlinhpham45678-dotcom/notes-api-2324802010274.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nhatlinhpham45678-dotcom/notes-api-2324802010274/issues"
+  },
+  "homepage": "https://github.com/nhatlinhpham45678-dotcom/notes-api-2324802010274#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}

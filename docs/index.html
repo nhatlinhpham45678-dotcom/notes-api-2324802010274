@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Kết quả Bài 1 - Hello Cloud API</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; margin: 30px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background-color: #f4f4f4; }
+    ul { background: #f9f9f9; padding: 20px 40px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>BÁO CÁO BÀI 1: LẬP TRÌNH TRÊN MÁY ẢO ĐÁM MÂY ĐẦU TIÊN</h1>
+
+  <h2>1. Bảng so sánh Môi trường</h2>
+  <table>
+    <tr>
+      <th>Tiêu chí</th>
+      <th>Máy cá nhân</th>
+      <th>Codespace</th>
+    </tr>
+    <tr>
+      <td>Thời gian bắt đầu đến khi chạy node -v</td>
+      <td>Cài thủ công (khoảng 10-15 phút)</td>
+      <td>Tự động cấp phát (~15-30 giây)</td>
+    </tr>
+    <tr>
+      <td>Số CPU, RAM (từ API)</td>
+      <td>12 CPUs (Intel i5-11400H), 16 GB</td>
+      <td>2 CPUs, 7.8 GB (dòng cơ bản)</td>
+    </tr>
+    <tr>
+      <td>Hệ điều hành</td>
+      <td>Windows (64-bit)</td>
+      <td>Linux 6.8.0-1064-azure</td>
+    </tr>
+    <tr>
+      <td>Cách truy cập từ thiết bị khác</td>
+      <td>Cần cấu hình Router / NAT / Ngrok</td>
+      <td>Đổi Port Visibility sang Public</td>
+    </tr>
+    <tr>
+      <td>Chi phí, đo bằng gì</td>
+      <td>Chi phí mua máy, tiền điện</td>
+      <td>Đo bằng Core-hours (Đã dùng: 0.47 core-hr ~ 0.09$, được miễn phí theo hạn mức)</td>
+    </tr>
+  </table>
+
+  <h2>2. Đối chiếu 5 đặc tính Điện toán đám mây (NIST)</h2>
+  <ul>
+    <li><b>On-demand self-service (Tự phục vụ theo yêu cầu):</b> Tạo tự động Codespace từ giao diện GitHub chỉ bằng 1 cú nhấp chuột mà không cần can thiệp từ quản trị viên.</li>
+    <li><b>Broad network access (Truy cập mạng rộng):</b> Truy cập vào ứng dụng/API đang chạy trong Codespace trên trình duyệt điện thoại qua kết nối Internet công cộng.</li>
+    <li><b>Resource pooling (Gộp tài nguyên):</b> Máy ảo Codespace chạy chung hạ tầng với nhiều người dùng khác trên trung tâm dữ liệu của GitHub/Azure.</li>
+    <li><b>Rapid elasticity (Co giãn nhanh):</b> Dễ dàng nâng cấp hoặc thay đổi cấu hình RAM/CPU của Codespace khi công việc yêu cầu tải cao hơn.</li>
+    <li><b>Measured service (Dịch vụ đo lường được):</b> Chi phí tiêu thụ tài nguyên được thống kê rõ ràng qua số lượng Core-hours trong mục Settings &gt; Billing.</li>
+  </ul>
+
+  <h2>3. Câu hỏi phản biện</h2>
+  <p><b>1. Host đổi khi Stop/Start lại không?</b> Sau khi Stop và Start lại, trường <code>host</code> thường sẽ thay đổi. Điều này chứng tỏ máy ảo của bạn được cấp phát động từ một kho tài nguyên chung (Resource Pooling), mỗi lần khởi tạo lại có thể được xếp trên một máy chủ vật lý khác.</p>
+  <p><b>2. Codespaces thuộc mô hình nào (IaaS, PaaS, SaaS)?</b> Codespaces là mô hình <b>PaaS (Platform as a Service)</b> (hoặc CaaS/IDEvaaS). Nhà cung cấp quản lý phần cứng, ảo hóa, và OS; bạn chỉ thao tác trên môi trường runtime và mã nguồn ứng dụng.</p>
+  <p><b>3. Ưu điểm so với phòng Lab truyền thống &amp; Rủi ro mới:</b>
+    <br>- <i>Ưu điểm khắc phục:</i> Không cần cài đặt môi trường đồng bộ trên từng máy phòng lab; môi trường nhất quán cho tất cả sinh viên.
+    <br>- <i>Rủi ro mới:</i> Phụ thuộc hoàn toàn vào kết nối Internet và rủi ro bảo mật/lộ dữ liệu khi quên chuyển cổng public thành private.
+  </p>
+</body>
+</html>
