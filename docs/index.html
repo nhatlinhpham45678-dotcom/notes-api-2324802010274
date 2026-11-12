@@ -64,5 +64,82 @@
     <br>- <i>Ưu điểm khắc phục:</i> Không cần cài đặt môi trường đồng bộ trên từng máy phòng lab; môi trường nhất quán cho tất cả sinh viên.
     <br>- <i>Rủi ro mới:</i> Phụ thuộc hoàn toàn vào kết nối Internet và rủi ro bảo mật/lộ dữ liệu khi quên chuyển cổng public thành private.
   </p>
+
+
+<hr>
+  <h1>BÁO CÁO BÀI 2: ẢO HÓA, CONTAINER VÀ MÔ PHỎNG TRUNG TÂM DỮ LIỆU</h1>
+
+  <h2>1. So sánh Máy ảo (Codespace) và Container</h2>
+  <table>
+    <tr>
+      <th>Tiêu chí</th>
+      <th>Codespace (Máy ảo)</th>
+      <th>Container notes2</th>
+    </tr>
+    <tr>
+      <td>Thời gian khởi động</td>
+      <td>1 phút</td>
+      <td>0m0.401s</td>
+    </tr>
+    <tr>
+      <td>Kích thước</td>
+      <td>15 GB-tháng hạn mức đĩa</td>
+      <td>63.3MB</td>
+    </tr>
+    <tr>
+      <td>Nhân hệ điều hành</td>
+      <td>Nhân Linux riêng biệt (ảo hóa phần cứng)</td>
+      <td>dùng chung với máy chủ (6.8.0-1070-azure trong và ngoài container)</td>
+    </tr>
+    <tr>
+      <td>Mức cô lập</td>
+      <td>Cao (cô lập hoàn toàn ở mức phần cứng/hypervisor)</td>
+      <td>Trung bình (cô lập tiến trình qua Linux Namespaces &amp; Cgroups)</td>
+    </tr>
+  </table>
+
+  <h2>2. Kết quả mô phỏng CloudSim Plus</h2>
+  <table>
+    <tr>
+      <th>Lần</th>
+      <th>Thay đổi</th>
+      <th>Thời điểm hoàn thành cloudlet cuối (giây mô phỏng)</th>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>Giữ nguyên cấu hình gốc</td>
+      <td>20.1s</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Nhân đôi VMS (2 &rarr; 4)</td>
+      <td>45.6s</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Nhân đôi CLOUDLETS (4 &rarr; 8)</td>
+      <td>40.1s</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Đổi sang CloudletSchedulerSpaceShared</td>
+      <td>20.1s</td>
+    </tr>
+  </table>
+
+  <h2>3. Câu hỏi phản biện Bài 2</h2>
+  <p><b>1. Vì sao API trong container notes2 vẫn báo memoryGB bằng RAM máy chủ dù đã giới hạn 128 MB? Ứng dụng Java hoặc Node.js cần lưu ý gì?</b>
+    <br>- <i>Giải thích:</i> Hàm <code>os.totalmem()</code> của Node.js đọc thông số từ <code>/proc/meminfo</code> của nhân Linux dùng chung (tức RAM của toàn bộ máy chủ Codespace), không tự động đọc giới hạn của Linux cgroups.
+    <br>- <i>Lưu ý:</i> Nếu không cấu hình giới hạn bộ nhớ trong runtime (ví dụ cờ <code>--max-old-space-size</code> cho Node.js hoặc <code>-XX:MaxRAMPercentage</code> cho JVM), ứng dụng sẽ lầm tưởng máy có 8GB RAM và cấp phát vượt quá 128MB, dẫn đến bị nhân Linux tiêu diệt đột ngột bằng lỗi <b>OOMKilled (Out Of Memory)</b>.
+  </p>
+  <p><b>2. Time-shared và space-shared khác nhau ra sao trong kết quả lần 3? Nhà cung cấp gói giá rẻ chọn chính sách nào?</b>
+    <br>- <i>Khác biệt:</i> <b>Time-shared</b> chia sẻ luân phiên CPU cho tất cả cloudlet cùng lúc (tất cả bắt đầu cùng lúc và hoàn thành chậm hơn); <b>Space-shared</b> cấp độc quyền lõi CPU cho từng cloudlet chạy tuần tự (tác vụ trước xong thì tác vụ sau mới chạy).
+    <br>- <i>Lựa chọn thương mại:</i> Các gói đám mây giá rẻ (như AWS t3.micro, Azure B-series) thường dùng <b>Time-shared</b> (chia sẻ tài nguyên vật lý/CPU credits) để tối đa hóa mật độ người dùng trên một máy chủ vật lý nhằm giảm giá thành, chấp nhận việc hiệu năng có thể dao động khi nhiều người dùng tải cao cùng lúc.
+  </p>
+  <p><b>3. Mô phỏng giúp ích gì trước khi thuê hạ tầng thật, và sai lệch ở đâu?</b>
+    <br>- <i>Lợi ích:</i> Giúp kiểm thử năng lực chịu tải, tối ưu số lượng máy chủ/máy ảo cần mua và đánh giá thuật toán lập lịch mà không tốn chi phí thuê phần cứng thật hay rủi ro sập hệ thống.
+    <br>- <i>Điểm sai lệch với thực tế:</i> Mô phỏng bỏ qua các yếu tố nhiễu vật lý phức tạp như độ trễ mạng thực tế (network jitter), nghẽn băng thông ổ đĩa (Disk I/O), chi phí chuyển ngữ cảnh (context switching) của hệ điều hành và hiện tượng "hàng xóm ồn ào" (noisy neighbor).
+  </p>
+
 </body>
 </html>
